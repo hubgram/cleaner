@@ -43,11 +43,11 @@ list of commands
 >`/del 10m` delete messages until 10 minutes ago<br>
 >>m = min, h=hour, 10h 5m = 10:5
 
-##TODO
-- [] Refactor and remove duplicated codes
-- [] Change peer storage behavior
-- [] Make it Async!
-- [] Clear for basic groups
+## TODO
+- [ ] Refactor and remove duplicated codes
+- [ ] Change peer storage behavior
+- [ ] Make it Async!
+- [ ] Clear for basic groups
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
