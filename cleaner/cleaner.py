@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 import pyrogram
 from pyrogram.api.functions.channels import DeleteUserHistory
-from .utils.fake_client import FakeClient
+from .utils.fake_client import FakeClient, log
 
 pyrogram.client.client.Session.notice_displayed = True
 
@@ -32,11 +32,11 @@ class Cleaner(FakeClient, pyrogram.Client):
 
     def start(self):
         super().start()
-        print('Cleaner bot Started!')
+        log.info('Cleaner bot Started!')
 
     def stop(self, block: bool = True):
         super().stop(block=block)
-        print('Cleaner bot Stopped!')
+        log.info('Cleaner bot Stopped!')
 
     def delete_user_messages(self, chat_id, user_id):
         """
@@ -79,6 +79,7 @@ class Cleaner(FakeClient, pyrogram.Client):
                 self.api_id = parser.getint("cleaner", "api_id")
                 self.api_hash = parser.get("cleaner", "api_hash")
             else:
+                log.error("No API Key found. More info: https://core.telegram.org/api/obtaining_api_id")
                 raise AttributeError("No API Key found. More info: https://core.telegram.org/api/obtaining_api_id")
 
         self._admin_ids.add(parser.getint('cleaner', 'admin_id'))
