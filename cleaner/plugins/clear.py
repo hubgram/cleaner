@@ -8,26 +8,28 @@ from ..utils import supergroup, admin
 log = logging.getLogger(__name__)
 
 
-@Cleaner.on_message(admin & supergroup & Filters.command('clear', prefixes=['!/#']))
+@Cleaner.on_message(admin & supergroup & Filters.command('clear', prefixes=['!', '/', '#']))
 def clear(bot: Cleaner, message: Message):
 
     assert bot.lock(message.chat.id)  # maybe alert by a message
-
+    
     # TODO: check permission (delete user history)
 
     def get_recent_user_ids():
         while True:
             last_messages = bot.get_history(message.chat.id)
-            yield set(msg.from_user.id for msg in last_messages)
+            yield set(msg.from_user.id for msg in last_messages if msg.from_user)
 
             if len(last_messages) < 100:  # are we done?!
                 return
 
     for user_ids in get_recent_user_ids():
         for user_id in user_ids:
-            while True:
+            while True: # todo: retries.
                 try:
-                    bot.delete_user_messages(message.chat.id, user_id)
+                    affected_history = bot.delete_user_messages(message.chat.id, user_id)
+                    # if not affected_history.pts_count:
+                    #     continue
                 except FloodWait as e:
                     time.sleep(e.x + 0.5)
                     continue
